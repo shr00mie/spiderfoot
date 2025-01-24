@@ -249,6 +249,8 @@ Interesting File Finder|Identifies potential files of interest, e.g. office docu
 Junk File Finder|Looks for old/temporary and other similar files.|Internal
 [Keybase](https://keybase.io/)|Obtain additional information about domain names and identified usernames.|Free API
 [Koodous](https://koodous.com/apks/)|Search Koodous for mobile apps.|Tiered API
+[LeakCheck Pro](https://leakcheck.io/?from=spiderfoot)|Gather breach data from LeakCheck API by e-mail, domain name or phone number|Tiered API
+[LeakCheck Public](https://leakcheck.io/?from=spiderfoot)|Gather public breach data from LeakCheck API|Free API
 [LeakIX](https://leakix.net/)|Search LeakIX for host data leaks, open ports, software and geoip.|Free API
 [Leak-Lookup](https://leak-lookup.com/)|Searches Leak-Lookup.com's database of breaches.|Free API
 [Maltiverse](https://maltiverse.com)|Obtain information about any malicious activities involving IP addresses|Free API
