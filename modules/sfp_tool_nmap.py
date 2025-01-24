@@ -149,9 +149,6 @@ class sfp_tool_nmap(SpiderFootPlugin):
                 self.debug(f"Error running Nmap: {stderr}, {stdout}")
                 return
 
-            if "No exact OS matches for host" in content or "OSScan results may be unreliable" in content:
-                self.debug(f"Couldn't reliably detect the OS for {eventData}")
-                return
         except Exception as e:
             self.error(f"Unable to run Nmap: {e}")
             return
@@ -161,6 +158,10 @@ class sfp_tool_nmap(SpiderFootPlugin):
             return
 
         if eventName == "IP_ADDRESS":
+            if "No exact OS matches for host" in content or "OSScan results may be unreliable" in content:
+                self.debug(f"Couldn't reliably detect the OS for {eventData}")
+                return
+
             try:
                 opsys = None
                 for line in content.split('\n'):
@@ -179,14 +180,20 @@ class sfp_tool_nmap(SpiderFootPlugin):
                 for line in content.split('\n'):
                     opsys = None
                     if "scan report for" in line:
-                        currentIp = line.split("(")[1].replace(")", "")
-                    if "OS details:" in line:
-                        junk, opsys = line.split(": ")
-
-                    if opsys and currentIp:
+                        if "(" in line:
+                            currentIp = line.split("(")[1].replace(")", "")
+                        else:
+                            currentIp = line.split(" for ")[1]
                         ipevent = SpiderFootEvent("IP_ADDRESS", currentIp, self.__name__, event)
                         self.notifyListeners(ipevent)
+                    elif "OS details:" in line:
+                        opsys = line.split(": ")[1]
 
+                    elif "No exact OS matches for host" in line or "OSScan results may be unreliable" in line:
+                        self.debug(f"Couldn't reliably detect the OS for {currentIp}")
+                        currentIp = None
+
+                    if opsys and currentIp:
                         evt = SpiderFootEvent("OPERATING_SYSTEM", opsys, self.__name__, ipevent)
                         self.notifyListeners(evt)
                         currentIp = None
